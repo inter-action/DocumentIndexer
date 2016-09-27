@@ -1,4 +1,4 @@
-package com.github.interaction.docsearcher
+package github.interaction.docsearcher
 
 import java.io.{BufferedReader, InputStreamReader}
 import java.nio.charset.StandardCharsets
