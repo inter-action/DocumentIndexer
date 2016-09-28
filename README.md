@@ -25,8 +25,8 @@ koajs估计短时间会应用不上, 如果接入angularjs写的前端UI, 目前
     其实我有考虑简单粗暴的mongodb提供内置的全文检索功能, 但是考虑到需要把文本数据重复导入到mongodb中我就有些蛋蛋的忧伤
 
 * akka-http:
-    没办法, 项目需要做成微服务, 提供RESTful接口是必须的。之所以选这个, 是因为我最早打算用spray http+akka(高并发, 不像传统jvm
-    webserver内部abuse线程模型处理并发请求，虽说项目根本没啥并发请求，但是这个b我还是要装下的)做rest，
+    没办法, 项目需要做成微服务, 提供RESTful接口是必须的。之所以选这个, 是因为我最早打算用spray http+akka做rest(高并发, 不像传统jvm
+    webserver内部abuse线程模型处理并发请求，虽说项目根本没啥并发请求，但是这个b我还是要强行装下的)，
     但是不知道从什么时候开始spray http+akka不被支持了, akka-http是未来的方向, akka团队内部大量使用spray http，
     所以他们打算整合http需求, spray-http就这样被废弃了。
     这样也好, 我也顺带学下akka( 少说500页文档要看 :(,  )，还有netty有可能我也不要看了 :), bitter sweet.
