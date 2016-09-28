@@ -28,6 +28,7 @@ libraryDependencies ++= {
     // start: akka http rest
     akka.http,
     akka.slf4j,
+    akka.sprayJson,
     "org.json4s"        %% "json4s-native"   % Json4sVersion,
     "org.json4s"        %% "json4s-ext"      % Json4sVersion,
     "ch.qos.logback"    %  "logback-classic" % "1.1.2",
@@ -60,3 +61,5 @@ scalacOptions ++= Seq(
 )
 
 initialCommands := "com.github.interaction.docsearcher._"
+
+cancelable in Global := true // stop app without quit sbt, http://stackoverflow.com/questions/5137460/sbt-stop-run-without-exiting

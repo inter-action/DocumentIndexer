@@ -6,6 +6,7 @@ import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.Date
 
+import github.interaction.docsearcher.constants.DEFAULT_CONFIGS
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document._
 import org.apache.lucene.index.IndexWriterConfig.OpenMode
@@ -40,14 +41,6 @@ object ArgumentParser {
     ts.filter(_.isDefined).map(_.get).toMap[String, String]
   }
 }
-
-object DEFAULT_CONFIGS {
-  val INDEX_PATH = Paths.get(System.getProperty("user.home"), ".lucene_indexs")
-  val DOC_PATH = "/Users/interaction/workspace/temp/testeddocs"
-  val CONTENT_FIELD = "contents"
-  val INGORE_FILE_SET = Set(".DS_Store")
-}
-
 
 
 object Indexer {

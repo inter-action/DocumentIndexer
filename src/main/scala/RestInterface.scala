@@ -1,21 +1,22 @@
 package github.interaction.docsearcher
 
+import akka.http.scaladsl.server.Route
+import github.interaction.docsearcher.resources.{DocResource, QuestionResource}
+import github.interaction.docsearcher.services.{LuceneService, QuestionService}
+
 import scala.concurrent.ExecutionContext
 
-import akka.http.scaladsl.server.Route
-
-import github.interaction.docsearcher.resources.QuestionResource
-import github.interaction.docsearcher.services.QuestionService
-
-trait RestInterface extends Resources {
+trait RestInterface extends MySource {
 
   implicit def executionContext: ExecutionContext
 
   lazy val questionService = new QuestionService
+  lazy val luceneService = new LuceneService()
 
-  val routes: Route = questionRoutes
+  val routes: Route = docRoutes ~ questionRoutes
 
 }
 
-trait Resources extends QuestionResource
+trait MySource extends DocResource with QuestionResource
+
 

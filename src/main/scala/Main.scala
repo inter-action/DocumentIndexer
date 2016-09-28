@@ -1,12 +1,12 @@
 package github.interaction.docsearcher
 
-import scala.concurrent.duration._
 import akka.actor._
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-
 import com.typesafe.config.ConfigFactory
+
+import scala.concurrent.duration._
 
 object Main extends App with RestInterface {
   val config = ConfigFactory.load()

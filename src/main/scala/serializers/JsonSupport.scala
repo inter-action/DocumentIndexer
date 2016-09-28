@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport
 import org.json4s.ext.JodaTimeSerializers
-import org.json4s.{native, DefaultFormats, Formats}
+import org.json4s.{DefaultFormats, Formats, native}
 
 trait JsonSupport extends Json4sSupport {
 

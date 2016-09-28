@@ -2,13 +2,13 @@ package github.interaction.docsearcher.routing
 
 import akka.http.scaladsl.marshalling.{ToResponseMarshallable, ToResponseMarshaller}
 import akka.http.scaladsl.model.HttpResponse
-
-import scala.concurrent.{ExecutionContext, Future}
 import akka.http.scaladsl.model.headers.Location
 import akka.http.scaladsl.server.{Directives, Route}
 import github.interaction.docsearcher.serializers.JsonSupport
 
-trait MyResource extends Directives with JsonSupport {
+import scala.concurrent.{ExecutionContext, Future}
+
+trait QuestionRoute extends Directives with JsonSupport {
 
   implicit def executionContext: ExecutionContext
 

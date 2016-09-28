@@ -18,6 +18,7 @@ object Libraries {
     def akka(module: String) = "com.typesafe.akka" %% s"akka-${module}" % "2.4.10"
 
     lazy val http = akka("http-experimental")
+    lazy val sprayJson = akka("http-spray-json-experimental")
     // new version, 2.3.15
     lazy val slf4j = "com.typesafe.akka" %% "akka-slf4j" % "2.3.9"
   }

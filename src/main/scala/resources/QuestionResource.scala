@@ -1,12 +1,11 @@
 package github.interaction.docsearcher.resources
 
 import akka.http.scaladsl.server.Route
-
 import github.interaction.docsearcher.entities.{Question, QuestionUpdate}
-import github.interaction.docsearcher.routing.MyResource
+import github.interaction.docsearcher.routing.QuestionRoute
 import github.interaction.docsearcher.services.QuestionService
 
-trait QuestionResource extends MyResource {
+trait QuestionResource extends QuestionRoute {
 
   val questionService: QuestionService
 
