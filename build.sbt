@@ -61,5 +61,3 @@ scalacOptions ++= Seq(
 )
 
 initialCommands := "com.github.interaction.docsearcher._"
-
-cancelable in Global := true // stop app without quit sbt, http://stackoverflow.com/questions/5137460/sbt-stop-run-without-exiting

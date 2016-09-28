@@ -15,26 +15,26 @@ import org.apache.lucene.index.{IndexWriter, IndexWriterConfig, Term}
 import org.apache.lucene.store.FSDirectory
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class LuceneService(implicit val executionContext: ExecutionContext) {
 
   //todo: replace Either with scalaz one, replace println with logger
-  def createIndex(indexUpdaterModel: IndexUpdaterModel): Future[Option[Throwable]] = Future {
-    val indexPath =
-      indexUpdaterModel.indexPath
-        .map(Paths.get(_))
-        .getOrElse(DEFAULT_CONFIGS.INDEX_PATH)
-    val isUpdate = indexUpdaterModel.isUpdate.getOrElse(false)
+  def createIndex(indexUpdaterModel: IndexUpdaterModel): Future[Try[Unit]] = Future {
+    Try {
+      val indexPath =
+        indexUpdaterModel.indexPath
+          .map(Paths.get(_))
+          .getOrElse(DEFAULT_CONFIGS.INDEX_PATH)
+      val isUpdate = indexUpdaterModel.isUpdate.getOrElse(false)
 
-    val docDir = Paths.get(indexUpdaterModel.docPath)
-    if (!Files.isReadable(docDir)) {
-      val throwable = new RuntimeException(s"Document directory ${docDir.toAbsolutePath} doesnt exist or is not readable")
-      //todo: why have to wrap around with Future ? does return type turn into Future[Future[Option[T]]]?
-      return Future(Some(throwable))
-    }
+      val docDir = Paths.get(indexUpdaterModel.docPath)
+      if (!Files.isReadable(docDir)) {
+        throw new RuntimeException(s"Document directory ${docDir.toAbsolutePath} doesnt exist or is not readable")
+      }
 
-    val start = new Date()
-    try {
+      val start = new Date()
+
       val dir = FSDirectory.open(indexPath)
       val analyzer = new StandardAnalyzer()
       val iwc = new IndexWriterConfig(analyzer)
@@ -54,15 +54,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
       writer.close()
       val end = new Date()
       println(s"${end.getTime - start.getTime} total miliseconds")
-      None
-
-    } catch {
-      case e: Throwable =>
-        println(s"fatal error, ${e.getMessage}")
-        Some(e)
     }
-
-
   }
 
 

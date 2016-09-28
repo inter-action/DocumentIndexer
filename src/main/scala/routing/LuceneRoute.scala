@@ -5,17 +5,18 @@ import akka.http.scaladsl.server.{Directives, Route}
 import github.interaction.docsearcher.serializers.JsonSupport
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
 trait LuceneRoute extends Directives with JsonSupport {
 
   implicit def executionContext: ExecutionContext
 
-  def completeIndex(hasError: Future[Option[Throwable]]): Route =
+  def completeIndex(hasError: Future[Try[Unit]]): Route =
     onSuccess(hasError){
-      case Some(e)=>
-        complete(HttpResponse(StatusCodes.ExpectationFailed, entity = HttpEntity(e.toString)))
-      case None =>
+      case Success(())=>
         complete(HttpResponse(StatusCodes.OK))
+      case Failure(ex) =>
+        complete(HttpResponse(StatusCodes.ExpectationFailed, entity = HttpEntity(ex.getMessage)))
     }
 
 }

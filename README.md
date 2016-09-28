@@ -33,6 +33,19 @@ koajs估计短时间会应用不上, 如果接入angularjs写的前端UI, 目前
     早些年akka就声名远扬了, 项目起源是erlang项目, 爱立信发布的论文。然后就被某大神搞了个scala版的，jvm上处理并发的高端库。 
 
 
+## Start It Up
+run:
+
+    > brew install sbt
+    > cd <this_project_dir>
+    > sbt
+    > runMain github.interaction.docsearcher.Main
+
+stop:
+    click any key
+    ctrl+c quit sbt
+
+
 ## Test RestAPI:
 
 Request:
@@ -75,22 +88,26 @@ curl -v -H "Content-Type: application/json" \
 
 
 ### todos:
+    done:
+        异常处理, lucene创建索引的时候如果抛出异常, 目前没有按预期返回给请求者, 而是直接在系统里抛出异常了 :(
+            ERROR [ActorSystemImpl]: Uncaught error from thread [quiz-management-service-akka.actor.default-dispatcher-8]
+            scala.runtime.NonLocalReturnControl: null
 
-    do i need to add file filter on indexer?
-    try to apply some machine learning, calc similarity etc
-    add scalaz lib & utilize it.
-    add docker packaging
-    provide match context & highlight
-    provide restful services, we can use akka-http
-    clear todos in code
-    replace println with normal logger.
-    make request able to respond with custom JSON object instead of plain string
+        make ctrl+c donest quit sbt, quit akka quit gracefully
 
-    异常处理, lucene创建索引的时候如果抛出异常, 目前没有按预期返回给请求者, 而是直接在系统里抛出异常了 :(
-        ERROR [ActorSystemImpl]: Uncaught error from thread [quiz-management-service-akka.actor.default-dispatcher-8]
-        scala.runtime.NonLocalReturnControl: null
+    pending:
 
-    add sbt-native packager:
-        http://doc.akka.io/docs/akka/2.4.10/intro/deployment-scenarios.html
-        http://www.scala-sbt.org/sbt-native-packager/
+        do i need to add file filter on indexer?
+        try to apply some machine learning, calc similarity etc
+        add scalaz lib & utilize it.
+        add docker packaging
+        provide match context & highlight
+        provide restful services, we can use akka-http
+        clear todos in code
+        replace println with normal logger.
+        make request able to respond with custom JSON object instead of plain string
+
+        add sbt-native packager:
+            http://doc.akka.io/docs/akka/2.4.10/intro/deployment-scenarios.html
+            http://www.scala-sbt.org/sbt-native-packager/
 

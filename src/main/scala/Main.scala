@@ -7,6 +7,7 @@ import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.duration._
+import scala.io.StdIn
 
 object Main extends App with RestInterface {
   val config = ConfigFactory.load()
@@ -26,4 +27,17 @@ object Main extends App with RestInterface {
     println(s"REST interface bound to ${binding.localAddress}") } recover { case ex =>
     println(s"REST interface could not bind to $host:$port ${ex.getMessage}")
   }
+
+  def wayOut(): Unit ={
+    val value = Option(StdIn.readLine("print any key to exit:\n"))
+    if (value.isDefined){
+      system.terminate() onSuccess {
+        case _ => System.exit(0)
+      }
+    }else{
+      wayOut()
+    }
+  }
+
+  wayOut()
 }
