@@ -8,3 +8,10 @@ object DEFAULT_CONFIGS {
   val CONTENT_FIELD = "contents"
   val INGORE_FILE_SET = Set(".DS_Store")
 }
+
+
+object DOC_FIELDS {
+  val PATH = "PATH"
+  val CONTENT = "CONTENT"
+  val LAST_MODIFIED = "LAST_MODIFIED"
+}

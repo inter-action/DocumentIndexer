@@ -6,12 +6,14 @@ import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.Date
 
-import github.interaction.docsearcher.constants.DEFAULT_CONFIGS
+import github.interaction.docsearcher.constants.{DEFAULT_CONFIGS, DOC_FIELDS}
 import github.interaction.docsearcher.entities._
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document._
 import org.apache.lucene.index.IndexWriterConfig.OpenMode
-import org.apache.lucene.index.{IndexWriter, IndexWriterConfig, Term}
+import org.apache.lucene.index.{DirectoryReader, IndexWriter, IndexWriterConfig, Term}
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.FSDirectory
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -57,6 +59,12 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     }
   }
 
+  def search(model: QueryModel): Future[Try[PaginationResult[DocumentResult]]] = Future {
+    Try {
+      MySearcher.search(model)
+    }
+  }
+
 
   private def indexDocs(writer: IndexWriter, file: Path, lastModified: Long): Unit = {
 
@@ -65,7 +73,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     // but dont tokenize the filed into separate words and dont index term frequency
     // or position information
     val doc = new Document
-    val pathField = new StringField("path", file.toString, Field.Store.YES)
+    val pathField = new StringField(DOC_FIELDS.PATH, file.toString, Field.Store.YES)
     doc.add(pathField)
 
     // Add the last modified date of the file a field named "modified".
@@ -75,7 +83,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     // year/month/day/hour/minutes/seconds, down the resolution you require.
     // For example the long value 2011021714 would mean
     // February 17, 2011, 2-3 PM.
-    doc.add(new LongField("modified", lastModified, Field.Store.NO))
+    doc.add(new LongField(DOC_FIELDS.LAST_MODIFIED, lastModified, Field.Store.NO))
     doc.add(new TextField(DEFAULT_CONFIGS.CONTENT_FIELD, new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
 
     if (writer.getConfig.getOpenMode == OpenMode.CREATE) {
@@ -84,7 +92,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     } else {
       println(s"updating file: ${file}")
       // new Term("path serve as docId
-      writer.updateDocument(new Term("path", file.toString), doc)
+      writer.updateDocument(new Term(DOC_FIELDS.PATH, file.toString), doc)
     }
 
   }
@@ -121,5 +129,31 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     }
   }
 
+}
+
+
+object MySearcher {
+  def search(model: QueryModel): PaginationResult[DocumentResult] = {
+    //todo: config indexPath to query
+    val reader = DirectoryReader.open(FSDirectory.open(DEFAULT_CONFIGS.INDEX_PATH))
+    val searcher = new IndexSearcher(reader)
+    val analyzer = new StandardAnalyzer()
+
+    //todo: content field
+    val parser = new QueryParser(DEFAULT_CONFIGS.CONTENT_FIELD, analyzer)
+    val query = parser.parse(model.query)
+
+    // todo: does lucene has this kind of api builted-in?
+    val results = searcher.search(query, model.total)
+    val hits = results.scoreDocs // this is total doc actually returned from search
+    val numTotalHits = results.totalHits // total search doc number that hit
+
+    val end = Math.max(model.endOffset, hits.length)
+    val list = for (i <- model.offsetStart until end) yield {
+      val doc = searcher.doc(hits(i).doc)
+      DocumentResult(doc.get(DOC_FIELDS.PATH))
+    }
+    PaginationResult(list.toList, numTotalHits)
+  }
 }
 

@@ -1,5 +1,6 @@
 package com.github.interaction.docsearcher
 
+import github.interaction.docsearcher.ArgumentParser
 import org.scalatest._
 
 class SearcherSpec extends FlatSpec with Matchers {
