@@ -43,8 +43,7 @@ run:
 
 stop:
     
-    click any key
-    ctrl+c quit sbt
+    hit Enter key or (any key)
 
 
 ## Test RestAPI:
@@ -70,7 +69,13 @@ curl -v -H "Content-Type: application/json" \
 
 
 
+## Akka
+marshalling 
 
+    http://doc.akka.io/docs/akka/2.4.4/java/http/routing-dsl/marshalling.html
+
+
+##---
 
 
     https://mvnrepository.com/
@@ -94,7 +99,7 @@ curl -v -H "Content-Type: application/json" \
             ERROR [ActorSystemImpl]: Uncaught error from thread [quiz-management-service-akka.actor.default-dispatcher-8]
             scala.runtime.NonLocalReturnControl: null
 
-        make ctrl+c donest quit sbt, quit akka quit gracefully
+        make app quit gracefully without quiting sbt
 
     pending:
 
@@ -108,7 +113,9 @@ curl -v -H "Content-Type: application/json" \
         replace println with normal logger.
         make request able to respond with custom JSON object instead of plain string
 
+
         add sbt-native packager:
             http://doc.akka.io/docs/akka/2.4.10/intro/deployment-scenarios.html
             http://www.scala-sbt.org/sbt-native-packager/
 
+        reading: http://doc.akka.io/docs/akka/2.4.2/scala/http/client-side/connection-level.html
