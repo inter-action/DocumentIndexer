@@ -1,5 +1,9 @@
 package github.interaction.docsearcher.entities
 
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import spray.json.{DefaultJsonProtocol, JsonFormat}
+
+
 //case class
 case class IndexUpdaterModel(indexPath: Option[String], docPath: String, isUpdate: Option[Boolean])
 
@@ -8,26 +12,26 @@ case class ResponseEntity[T](data: T)
 
 case class QueryModel(
                        query: String,
-                       startPage: Option[Int] = Some(1),
-                       itemsPerPage: Option[Int] = Some(10)
-                     ){
+                       startPage: Int = 1,
+                       itemsPerPage: Int = 10
+                     ) {
 
-  val _startPage = startPage.get
-  val _itemsPerPage = itemsPerPage.get
 
   // total rows to fetch
-  def total = _startPage * _itemsPerPage
+  def total = startPage * itemsPerPage
+
   // include
-  def offsetStart = (_startPage - 1) * _itemsPerPage
+  def offsetStart = (startPage - 1) * itemsPerPage
+
   // exclude
-  def endOffset = _startPage * _itemsPerPage
+  def endOffset = startPage * itemsPerPage
 }
 
 case class PaginationResult[T](
-                        data: List[T],
-                        total: Int
-                        )
+                                data: List[T],
+                                total: Int
+                              )
 
 case class DocumentResult(
-                         path: String
+                           path: String
                          )

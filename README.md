@@ -68,6 +68,12 @@ curl -v -H "Content-Type: application/json" \
 ``
 
 
+搜索lucene索引 Request:
+```
+curl -v http://localhost:5000/docs?query=scala
+``
+
+
 
 ## Akka
 marshalling 
@@ -100,6 +106,7 @@ marshalling
             scala.runtime.NonLocalReturnControl: null
 
         make app quit gracefully without quiting sbt
+        make request able to respond with custom JSON object instead of plain string
 
     pending:
 
@@ -111,7 +118,6 @@ marshalling
         provide restful services, we can use akka-http
         clear todos in code
         replace println with normal logger.
-        make request able to respond with custom JSON object instead of plain string
 
 
         add sbt-native packager:

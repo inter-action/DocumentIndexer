@@ -19,10 +19,12 @@ import scala.io.StdIn
 
 
 
-/*
-http://lucene.apache.org/core/5_5_0/demo/overview-summary.html#IndexFiles
- */
+/**
+  this file rewrites code located at
+  http://lucene.apache.org/core/5_5_0/demo/overview-summary.html#IndexFiles
 
+  just for test purpose
+ */
 
 object ArgumentParser {
   def parse(str: String): Map[String, String] = {

@@ -21,6 +21,12 @@ import scala.util.Try
 
 class LuceneService(implicit val executionContext: ExecutionContext) {
 
+  def search(model: QueryModel): Future[Try[PaginationResult[DocumentResult]]] = Future {
+    Try {
+      MySearcher.search(model)
+    }
+  }
+
   //todo: replace Either with scalaz one, replace println with logger
   def createIndex(indexUpdaterModel: IndexUpdaterModel): Future[Try[Unit]] = Future {
     Try {
@@ -56,12 +62,6 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
       writer.close()
       val end = new Date()
       println(s"${end.getTime - start.getTime} total miliseconds")
-    }
-  }
-
-  def search(model: QueryModel): Future[Try[PaginationResult[DocumentResult]]] = Future {
-    Try {
-      MySearcher.search(model)
     }
   }
 
@@ -148,7 +148,7 @@ object MySearcher {
     val hits = results.scoreDocs // this is total doc actually returned from search
     val numTotalHits = results.totalHits // total search doc number that hit
 
-    val end = Math.max(model.endOffset, hits.length)
+    val end = Math.min(model.endOffset, hits.length)
     val list = for (i <- model.offsetStart until end) yield {
       val doc = searcher.doc(hits(i).doc)
       DocumentResult(doc.get(DOC_FIELDS.PATH))

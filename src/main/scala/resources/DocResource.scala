@@ -16,11 +16,11 @@ trait DocResource extends LuceneRoute {
         entity(as[IndexUpdaterModel]) { model =>
           completeIndex(luceneService.createIndex(model))
         }
-      }
-
+      } ~
       get {
         parameters('query, 'startPage ? 1, 'itemsPerPage ? 10) { (query, startPage, itemsPerPage)=>
-          complete(HttpResponse(StatusCodes.OK, entity = HttpEntity(s"${query} ${startPage} ${itemsPerPage}")))
+          val result = luceneService.search(QueryModel(query, startPage, itemsPerPage))
+          completeOp(result)
         }
       }
     }
