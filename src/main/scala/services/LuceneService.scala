@@ -15,11 +15,13 @@ import org.apache.lucene.index.{DirectoryReader, IndexWriter, IndexWriterConfig,
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.FSDirectory
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class LuceneService(implicit val executionContext: ExecutionContext) {
+  lazy val logger = LoggerFactory.getLogger(this.getClass)
 
   def search(model: QueryModel): Future[Try[PaginationResult[DocumentResult]]] = Future {
     Try {
@@ -27,7 +29,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     }
   }
 
-  //todo: replace Either with scalaz one, replace println with logger
+  //todo: replace Either with scalaz one
   def createIndex(indexUpdaterModel: IndexUpdaterModel): Future[Try[Unit]] = Future {
     Try {
       val indexPath =
@@ -61,7 +63,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
 
       writer.close()
       val end = new Date()
-      println(s"${end.getTime - start.getTime} total miliseconds")
+      logger.info(s"${end.getTime - start.getTime} total miliseconds")
     }
   }
 
@@ -87,10 +89,10 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     doc.add(new TextField(DEFAULT_CONFIGS.CONTENT_FIELD, new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
 
     if (writer.getConfig.getOpenMode == OpenMode.CREATE) {
-      println(s"add file: ${file}")
+      logger.info(s"add file: ${file}")
       writer.addDocument(doc)
     } else {
-      println(s"updating file: ${file}")
+      logger.info(s"updating file: ${file}")
       // new Term("path serve as docId
       writer.updateDocument(new Term(DOC_FIELDS.PATH, file.toString), doc)
     }

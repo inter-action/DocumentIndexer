@@ -65,20 +65,35 @@ curl -v http://localhost:5000/questions/test
 curl -v -H "Content-Type: application/json" \
 	 -X PUT http://localhost:5000/docs \
 	 -d '{ "docPath": "/Users/interaction/workspace/temp/testeddocs" }'
-``
+```
 
 
 搜索lucene索引 Request:
+
 ```
 curl -v http://localhost:5000/docs?query=scala
-``
+```
 
+
+
+
+## [Logger Levels](http://stackoverflow.com/questions/5817738/how-to-use-log-levels-in-java)
+
+We're using Log4J and the following levels:
+
+* ERROR: Any error/exception that is or might be critical. Our Logger automatically sends an email for each such message on our servers (usage:  logger.error("message"); )
+* WARN: Any message that might warn us of potential problems, e.g. when a user tried to log in with wrong credentials - which might indicate an attack if that happens often or in short periods of time (usage: logger.warn("message"); )
+* INFO: Anything that we want to know when looking at the log files, e.g. when a scheduled job started/ended (usage: logger.info("message"); )
+* DEBUG: As the name says, debug messages that we only rarely turn on. (usage: logger.debug("message"); )
+
+The beauty of this is that if you set the log level to WARN, info and debug messages have next to no performance impact. If you need to get additional information from a production system you just can lower the level to INFO or DEBUG for a short period of time (since you'd get much more log entries which make your log files bigger and harder to read). Adjusting log levels etc. can normally be done at runtime (our JBoss instance checks for changes in that config every minute or so).
 
 
 ## Akka
 marshalling 
 
     http://doc.akka.io/docs/akka/2.4.4/java/http/routing-dsl/marshalling.html
+
 
 
 ##---
@@ -107,17 +122,17 @@ marshalling
 
         make app quit gracefully without quiting sbt
         make request able to respond with custom JSON object instead of plain string
+        replace println with normal logger.
+        provide restful services, we can use akka-http
 
     pending:
 
         do i need to add file filter on indexer?
         try to apply some machine learning, calc similarity etc
-        add scalaz lib & utilize it.
-        add docker packaging
+        add scalaz lib & utilize it & refactor codes 
         provide match context & highlight
-        provide restful services, we can use akka-http
         clear todos in code
-        replace println with normal logger.
+        
 
 
         add sbt-native packager:

@@ -5,11 +5,14 @@ import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import scala.io.StdIn
 
 object Main extends App with RestInterface {
+  lazy val logger = LoggerFactory.getLogger(this.getClass)
+
   val config = ConfigFactory.load()
   val host = config.getString("http.host")
   val port = config.getInt("http.port")
@@ -25,7 +28,7 @@ object Main extends App with RestInterface {
 
 
   val bindingFuture = Http().bindAndHandle(handler = api, interface = host, port = port)
-  println(s"Server online at http://localhost:5000/\nPress RETURN to stop...")
+  logger.info(s"Server online at http://localhost:5000/\nPress RETURN to stop...")
   StdIn.readLine() // let it run until user presses return
   bindingFuture
     .flatMap(_.unbind()) // trigger unbinding from the port
@@ -39,7 +42,7 @@ object Main extends App with RestInterface {
 
   def terminateAkka(): Unit = {
     system.terminate() onSuccess {
-      case _ => println("system exit sucessfully")
+      case _ => logger.info("system exit sucessfully")
     }
   }
 
