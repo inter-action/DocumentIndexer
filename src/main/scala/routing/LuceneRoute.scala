@@ -4,6 +4,7 @@ import akka.http.scaladsl.marshalling.ToEntityMarshaller
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.{Directives, Route}
 import github.interaction.docsearcher.serializers.{JsonSupport, MyJsonSupport}
+import org.slf4j.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
@@ -23,6 +24,7 @@ trait LuceneRoute extends Directives with JsonSupport {
       case Success(())=>
         complete("")
       case Failure(ex) =>
+        ex.printStackTrace(System.out) //have better way to handle it ?
         complete((StatusCodes.ExpectationFailed, ex.getMessage))
     }
 
@@ -31,6 +33,7 @@ trait LuceneRoute extends Directives with JsonSupport {
       case Success(t)=>
         complete((StatusCodes.OK, t))
       case Failure(ex) =>
+        ex.printStackTrace(System.out)
         complete((StatusCodes.ExpectationFailed, ex.getMessage))
     }
 }

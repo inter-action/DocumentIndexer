@@ -14,10 +14,12 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode
 import org.apache.lucene.index.{DirectoryReader, IndexWriter, IndexWriterConfig, Term}
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.highlight._
 import org.apache.lucene.store.FSDirectory
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.io.Source
 import scala.util.Try
 
 class LuceneService(implicit val executionContext: ExecutionContext) {
@@ -86,7 +88,15 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
     // For example the long value 2011021714 would mean
     // February 17, 2011, 2-3 PM.
     doc.add(new LongField(DOC_FIELDS.LAST_MODIFIED, lastModified, Field.Store.NO))
-    doc.add(new TextField(DEFAULT_CONFIGS.CONTENT_FIELD, new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
+//    doc.add(new TextField(
+//      DOC_FIELDS.CONTENT,
+//      new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
+
+    doc.add(
+      new TextField(
+        DOC_FIELDS.CONTENT,
+        Source.fromFile(file.toFile, "utf8").getLines().mkString("\n"),
+        Field.Store.YES))
 
     if (writer.getConfig.getOpenMode == OpenMode.CREATE) {
       logger.info(s"add file: ${file}")
@@ -119,8 +129,11 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
       Files.walkFileTree(path, new SimpleFileVisitor[Path] {
         override def visitFile(file: Path,
                                attrs: BasicFileAttributes): FileVisitResult = {
-
-          indexDocs(writer, file, attrs.lastModifiedTime().toMillis)
+          val filename = file.getFileName.toString
+          val idx = filename.indexOf(".")
+          if (idx == -1 || filename.substring(idx) == ".txt"){//ignore other extensions
+            indexDocs(writer, file, attrs.lastModifiedTime().toMillis)
+          }
           FileVisitResult.CONTINUE
 
         }
@@ -135,6 +148,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
 
 
 object MySearcher {
+  lazy val logger = LoggerFactory.getLogger(this.getClass)
   def search(model: QueryModel): PaginationResult[DocumentResult] = {
     //todo: config indexPath to query
     val reader = DirectoryReader.open(FSDirectory.open(DEFAULT_CONFIGS.INDEX_PATH))
@@ -142,20 +156,26 @@ object MySearcher {
     val analyzer = new StandardAnalyzer()
 
     //todo: content field
-    val parser = new QueryParser(DEFAULT_CONFIGS.CONTENT_FIELD, analyzer)
+    val parser = new QueryParser(DOC_FIELDS.CONTENT, analyzer)
     val query = parser.parse(model.query)
+    val htmlFormatter = new SimpleHTMLFormatter()
+    val highlighter = new Highlighter(htmlFormatter, new QueryScorer(query))
 
     // todo: does lucene has this kind of api builted-in?
-    val results = searcher.search(query, model.total)
-    val hits = results.scoreDocs // this is total doc actually returned from search
-    val numTotalHits = results.totalHits // total search doc number that hit
+    val topDocs = searcher.search(query, model.total)
+    val hits = topDocs.scoreDocs // this is total doc actually returned from search
+    val numTotalHits = topDocs.totalHits // total search doc number that hit
 
     val end = Math.min(model.endOffset, hits.length)
     val list = for (i <- model.offsetStart until end) yield {
-      val doc = searcher.doc(hits(i).doc)
-      DocumentResult(doc.get(DOC_FIELDS.PATH))
+      val docId = hits(i).doc
+      val doc = searcher.doc(docId)
+      val text = doc.get(DOC_FIELDS.CONTENT)
+      val tokenStream = TokenSources.getAnyTokenStream(searcher.getIndexReader, docId, DOC_FIELDS.CONTENT, analyzer)
+      val frags = highlighter.getBestTextFragments(tokenStream, text, false, 10)
+      val matchContent = frags.filter(f => f != null && f.getScore > 0).map(_.toString).mkString("\n")
+      DocumentResult(doc.get(DOC_FIELDS.PATH), matchContent)
     }
     PaginationResult(list.toList, numTotalHits)
   }
 }
-

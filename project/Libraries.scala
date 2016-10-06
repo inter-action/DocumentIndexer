@@ -11,6 +11,7 @@ object Libraries {
     lazy val core = lucene("core")
     lazy val queryParser = lucene("queryparser")
     lazy val analyzersCommon = lucene("analyzers-common")
+    lazy val highlighter = lucene("highlighter")
   }
 
   object akka {

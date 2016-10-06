@@ -124,14 +124,19 @@ marshalling
         make request able to respond with custom JSON object instead of plain string
         replace println with normal logger.
         provide restful services, we can use akka-http
+        provide match context & highlight
+            http://makble.com/how-to-do-lucene-search-highlight-example
 
     pending:
-
-        do i need to add file filter on indexer?
         try to apply some machine learning, calc similarity etc
         add scalaz lib & utilize it & refactor codes 
-        provide match context & highlight
+
+        add file name to the sorting weight
         clear todos in code
+        replace standard analyzer with optimized chiniese tokenizer
+        lucene term vector
+        suppress scala deprecated api warning
+
         
 
 

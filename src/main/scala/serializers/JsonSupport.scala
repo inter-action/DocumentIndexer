@@ -26,7 +26,7 @@ trait JsonSupport extends Json4sSupport {
 // http://doc.akka.io/docs/akka/2.4.11/scala/http/common/json-support.html#akka-http-spray-json
 trait MyJsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   // jsonFormat<n>: n stands number of params in the type class
-  implicit val documentResultFormat = jsonFormat1(DocumentResult)
+  implicit val documentResultFormat = jsonFormat2(DocumentResult)
 
   implicit def paginationResultFormat[A: JsonFormat] = jsonFormat2(PaginationResult.apply[A])
 

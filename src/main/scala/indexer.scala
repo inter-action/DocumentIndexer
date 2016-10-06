@@ -6,7 +6,7 @@ import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.Date
 
-import github.interaction.docsearcher.constants.DEFAULT_CONFIGS
+import github.interaction.docsearcher.constants.{DEFAULT_CONFIGS, DOC_FIELDS}
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document._
 import org.apache.lucene.index.IndexWriterConfig.OpenMode
@@ -126,7 +126,7 @@ object Indexer {
     // For example the long value 2011021714 would mean
     // February 17, 2011, 2-3 PM.
     doc.add(new LongField("modified", lastModified, Field.Store.NO))
-    doc.add(new TextField(DEFAULT_CONFIGS.CONTENT_FIELD, new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
+    doc.add(new TextField(DOC_FIELDS.CONTENT, new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
 
     if (writer.getConfig.getOpenMode == OpenMode.CREATE) {
       println(s"add file: ${file}")
@@ -177,7 +177,7 @@ object Indexer {
 
 object Searcher {
   var indexPath = DEFAULT_CONFIGS.INDEX_PATH
-  var field = DEFAULT_CONFIGS.CONTENT_FIELD
+  var field = DOC_FIELDS.CONTENT
   var queries = ""
   var repeat = 0
   var queryString = ""

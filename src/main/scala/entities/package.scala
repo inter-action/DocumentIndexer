@@ -33,5 +33,6 @@ case class PaginationResult[T](
                               )
 
 case class DocumentResult(
-                           path: String
+                           path: String,
+                           matchContent: String
                          )

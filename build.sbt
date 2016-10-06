@@ -25,6 +25,7 @@ libraryDependencies ++= {
     lucene.core,
     lucene.queryParser,
     lucene.analyzersCommon,
+    lucene.highlighter,
     // start: akka http rest
     akka.http,
     akka.slf4j,
@@ -43,7 +44,7 @@ libraryDependencies ++= {
 // http://blog.threatstack.com/useful-scalac-options-for-better-scala-development-part-1
 scalacOptions ++= Seq(
     "-target:jvm-1.8", // enforce jdk
-    "-deprecation",
+    "-deprecation", // Emit warning and location for usages of deprecated APIs.
     "-encoding", "UTF-8",
     "-feature",
     "-language:existentials",
@@ -52,7 +53,8 @@ scalacOptions ++= Seq(
     "-language:experimental.macros",
     "-language:postfixOps",
     "-unchecked",
-    "-Xfatal-warnings",
+    //lucene searcher highlight component require this deprecated api :(
+//    "-Xfatal-warnings", // Fail the compilation if there are any warnings.
     "-Xlint",// Enable recommended additional warnings.
     "-Yinline-warnings",
     "-Ywarn-dead-code",
