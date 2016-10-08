@@ -126,6 +126,11 @@ marshalling
         provide restful services, we can use akka-http
         provide match context & highlight
             http://makble.com/how-to-do-lucene-search-highlight-example
+        replace standard analyzer with optimized chiniese tokenizer
+            http://codepub.cn/2016/03/23/Maven-project-integrating-Lucene-Chinese-Segmentation-tools-Jcseg-and-Ansj/
+            最终用了lucene自带的smartcn analyzer, 因为项目要求不高，简单起见就用了这个，复杂的实现看上边的链接
+        lucene term vector
+            http://makble.com/what-is-term-vector-in-lucene
 
     pending:
         try to apply some machine learning, calc similarity etc
@@ -133,9 +138,10 @@ marshalling
 
         add file name to the sorting weight
         clear todos in code
-        replace standard analyzer with optimized chiniese tokenizer
-        lucene term vector
         suppress scala deprecated api warning
+        trie:
+            https://www.youtube.com/watch?v=RIUY7ieyH40
+            https://en.wikipedia.org/wiki/Trie
 
         
 
