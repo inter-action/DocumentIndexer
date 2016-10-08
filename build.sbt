@@ -26,6 +26,8 @@ libraryDependencies ++= {
     lucene.queryParser,
     lucene.analyzersCommon,
     lucene.highlighter,
+    // chinese tokenizer
+    lucene.smartcn,
     // start: akka http rest
     akka.http,
     akka.slf4j,

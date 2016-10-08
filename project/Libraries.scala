@@ -12,6 +12,7 @@ object Libraries {
     lazy val queryParser = lucene("queryparser")
     lazy val analyzersCommon = lucene("analyzers-common")
     lazy val highlighter = lucene("highlighter")
+    lazy val smartcn = lucene("analyzers-smartcn")
   }
 
   object akka {

@@ -1,14 +1,12 @@
 package github.interaction.docsearcher.services
 
-import java.io.{BufferedReader, InputStreamReader}
-import java.nio.charset.StandardCharsets
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.Date
 
 import github.interaction.docsearcher.constants.{DEFAULT_CONFIGS, DOC_FIELDS}
 import github.interaction.docsearcher.entities._
-import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer
 import org.apache.lucene.document._
 import org.apache.lucene.index.IndexWriterConfig.OpenMode
 import org.apache.lucene.index.{DirectoryReader, IndexWriter, IndexWriterConfig, Term}
@@ -48,8 +46,7 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
       val start = new Date()
 
       val dir = FSDirectory.open(indexPath)
-      val analyzer = new StandardAnalyzer()
-      val iwc = new IndexWriterConfig(analyzer)
+      val iwc = new IndexWriterConfig(AnalyzerFactory.getAnalyzer())
 
       if (isUpdate) {
         // create a new index in the directory, removing any previously indexed directory
@@ -146,6 +143,10 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
 
 }
 
+object AnalyzerFactory {
+  def getAnalyzer() = new SmartChineseAnalyzer()
+}
+
 
 object MySearcher {
   lazy val logger = LoggerFactory.getLogger(this.getClass)
@@ -153,7 +154,7 @@ object MySearcher {
     //todo: config indexPath to query
     val reader = DirectoryReader.open(FSDirectory.open(DEFAULT_CONFIGS.INDEX_PATH))
     val searcher = new IndexSearcher(reader)
-    val analyzer = new StandardAnalyzer()
+    val analyzer = AnalyzerFactory.getAnalyzer()
 
     //todo: content field
     val parser = new QueryParser(DOC_FIELDS.CONTENT, analyzer)
