@@ -6,7 +6,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport
 import github.interaction.docsearcher.entities.{DocumentResult, PaginationResult}
 import org.json4s.ext.JodaTimeSerializers
-import org.json4s.{DefaultFormats, Formats, NoTypeHints, native}
+import org.json4s.{DefaultFormats, Formats, native}
 import spray.json.{DefaultJsonProtocol, JsonFormat}
 
 trait JsonSupport extends Json4sSupport {

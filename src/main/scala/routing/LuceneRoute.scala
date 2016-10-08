@@ -1,10 +1,9 @@
 package github.interaction.docsearcher.routing
 
 import akka.http.scaladsl.marshalling.ToEntityMarshaller
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.{Directives, Route}
-import github.interaction.docsearcher.serializers.{JsonSupport, MyJsonSupport}
-import org.slf4j.Logger
+import github.interaction.docsearcher.serializers.JsonSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}

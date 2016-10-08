@@ -1,6 +1,5 @@
 package github.interaction.docsearcher.resources
 
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Route
 import github.interaction.docsearcher.entities._
 import github.interaction.docsearcher.routing.LuceneRoute

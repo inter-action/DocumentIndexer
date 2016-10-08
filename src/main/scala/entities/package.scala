@@ -1,8 +1,5 @@
 package github.interaction.docsearcher.entities
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import spray.json.{DefaultJsonProtocol, JsonFormat}
-
 
 //case class
 case class IndexUpdaterModel(indexPath: Option[String], docPath: String, isUpdate: Option[Boolean])

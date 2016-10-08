@@ -1,7 +1,8 @@
 package com.github.interaction.docsearcher
 
-import collection.mutable.Stack
 import org.scalatest._
+
+import scala.collection.mutable.Stack
 
 class ExampleSpec extends FlatSpec with Matchers {
 
