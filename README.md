@@ -46,6 +46,42 @@ stop:
     hit Enter key or (any key)
 
 
+## [Packaging: sbt-native-packager] (http://www.scala-sbt.org/sbt-native-packager/gettingstarted.html#your-first-package)
+
+sbt-native-packager 可以将scala项目打包成各种各样的格式。目前我也不是特别懂。目前我直接用最简单的universal packager
+打包, 由于我的机器是mac我就尝试了mac下的dmg打包, 当然还有很多方式。
+
+
+### native-packager 组成:
+又 formats, Project Archetypes两部分组成
+formats 主要控制打包的构建的目标格式
+Project Archetypes 主要定义项目的格式, 由项目的格式经由formats生成最终的package. 项目的格式定义了什么该copy和增加一些而外的feature。
+
+Formats:
+* universal # 最通用最基础的打包格式
+* JDKPackager Plugin # 用于构建原生的本地应用, 有图标, 有安装过程的那种
+
+
+### universal to mac
+切到工程目录, 执行`sbt universal:packageOsxDmg`
+
+打包完的dmg会在 `/target/universal` 路径下： 主要包含的文件构成是 bash 脚本 + java lib 的dependencies
+
+### universal to docker
+
+http://www.scala-sbt.org/sbt-native-packager/formats/docker.html
+
+`sbt docker:publishLocal` native-packager 会创建bash脚本和对应的Dockerfile。然后自动开启docker构建流程，发布到
+ 本机的docker server。当然你可以直接利用 native-packager生成好的文件手动build docker
+
+执行完之后，你可以通过docker ps看见构建完的镜像,
+
+    docker run 执行
+
+执行过程有问题, 以后有时间看下
+
+
+
 ## Test RestAPI:
 
 Request:
@@ -131,23 +167,20 @@ marshalling
             最终用了lucene自带的smartcn analyzer, 因为项目要求不高，简单起见就用了这个，复杂的实现看上边的链接
         lucene term vector
             http://makble.com/what-is-term-vector-in-lucene
-
-    pending:
-        try to apply some machine learning, calc similarity etc
-        add scalaz lib & utilize it & refactor codes 
-
-        add file name to the sorting weight
-        clear todos in code
         suppress scala deprecated api warning
+            ignored, seems scala dosnt support this feature
         trie:
             https://www.youtube.com/watch?v=RIUY7ieyH40
             https://en.wikipedia.org/wiki/Trie
 
-        
-
-
         add sbt-native packager:
             http://doc.akka.io/docs/akka/2.4.10/intro/deployment-scenarios.html
             http://www.scala-sbt.org/sbt-native-packager/
+    pending:
+        add scala linter
+        try to apply some machine learning, calc similarity etc
+        add scalaz lib & utilize it & refactor codes 
+        add file name to the sorting weight
+        clear todos in code
 
         reading: http://doc.akka.io/docs/akka/2.4.2/scala/http/client-side/connection-level.html

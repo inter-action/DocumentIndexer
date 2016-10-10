@@ -65,3 +65,9 @@ scalacOptions ++= Seq(
 )
 
 initialCommands := "com.github.interaction.docsearcher._"
+
+mainClass in Compile := Some("github.interaction.docsearcher.Main")
+
+enablePlugins(JavaAppPackaging)
+
+
