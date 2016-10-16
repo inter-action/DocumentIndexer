@@ -6,4 +6,3 @@
       掉第三方jar包自带的logback.xml
       http://stackoverflow.com/questions/13788346/logback-xml-from-imported-jar-cause-a-warning
 
-      

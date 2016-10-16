@@ -89,11 +89,15 @@ class LuceneService(implicit val executionContext: ExecutionContext) {
 //      DOC_FIELDS.CONTENT,
 //      new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))))
 
+    val textField = new FieldType(TextField.TYPE_NOT_STORED)
+    textField.setStoreTermVectors(true)
     doc.add(
-      new TextField(
+      new Field(
         DOC_FIELDS.CONTENT,
         Source.fromFile(file.toFile, "utf8").getLines().mkString("\n"),
-        Field.Store.YES))
+        textField
+      )
+    )
 
     if (writer.getConfig.getOpenMode == OpenMode.CREATE) {
       logger.info(s"add file: ${file}")
@@ -180,3 +184,5 @@ object MySearcher {
     PaginationResult(list.toList, numTotalHits)
   }
 }
+
+

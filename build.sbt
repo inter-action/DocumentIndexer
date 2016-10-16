@@ -11,6 +11,7 @@ scalaVersion := "2.11.8"
 crossScalaVersions := Seq("2.11.8")
 
 resolvers ++= Seq(
+
   // can i remove this following two?
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
   "Artima Maven Repository" at "http://repo.artima.com/releases",
@@ -37,6 +38,9 @@ libraryDependencies ++= {
     "ch.qos.logback"    %  "logback-classic" % "1.1.2",
     "de.heikoseeberger" %% "akka-http-json4s" % "1.4.2",
     // end: akka http rest
+    // start: my lib
+    "com.github.interaction" %% "algorithms_of_the_intelligent_web" % "0.1.0",
+    // end: my lib
     "org.scalactic" %% "scalactic" % "3.0.0",
     "org.scalatest" %% "scalatest" % "3.0.0" % "test"
   )
@@ -54,6 +58,7 @@ scalacOptions ++= Seq(
     "-language:implicitConversions",
     "-language:experimental.macros",
     "-language:postfixOps",
+    "-language:reflectiveCalls", // enable structual type
     "-unchecked",
     //lucene searcher highlight component require this deprecated api :(
 //    "-Xfatal-warnings", // Fail the compilation if there are any warnings.

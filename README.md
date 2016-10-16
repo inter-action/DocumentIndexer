@@ -46,6 +46,37 @@ stop:
     hit Enter key or (any key)
 
 
+
+
+## Test RestAPI:
+
+Request:
+```
+curl -v -H "Content-Type: application/json" \
+	 -X POST http://localhost:5000/questions \
+	 -d '{"id": "test", "title": "MyTitle", "text":"The text of my question"}'
+```
+
+Request:
+```
+curl -v http://localhost:5000/questions/test
+```
+
+创建lucene索引 Request:
+```
+curl -v -H "Content-Type: application/json" \
+	 -X PUT http://localhost:5000/docs \
+	 -d '{ "docPath": "/Users/interaction/workspace/temp/testeddocs" }'
+```
+
+
+搜索lucene索引 Request:
+
+```
+curl -v http://localhost:5000/docs?query=scala
+```
+
+
 ## [Packaging: sbt-native-packager] (http://www.scala-sbt.org/sbt-native-packager/gettingstarted.html#your-first-package)
 
 sbt-native-packager 可以将scala项目打包成各种各样的格式。目前我也不是特别懂。目前我直接用最简单的universal packager
@@ -82,35 +113,32 @@ http://www.scala-sbt.org/sbt-native-packager/formats/docker.html
 
 
 
-## Test RestAPI:
+## Akka
+marshalling 
 
-Request:
-```
-curl -v -H "Content-Type: application/json" \
-	 -X POST http://localhost:5000/questions \
-	 -d '{"id": "test", "title": "MyTitle", "text":"The text of my question"}'
-```
-
-Request:
-```
-curl -v http://localhost:5000/questions/test
-```
-
-创建lucene索引 Request:
-```
-curl -v -H "Content-Type: application/json" \
-	 -X PUT http://localhost:5000/docs \
-	 -d '{ "docPath": "/Users/interaction/workspace/temp/testeddocs" }'
-```
+    http://doc.akka.io/docs/akka/2.4.4/java/http/routing-dsl/marshalling.html
 
 
-搜索lucene索引 Request:
+## scala
 
-```
-curl -v http://localhost:5000/docs?query=scala
-```
+    // catch NonFatal error
+    case NonFatal(e) => Failure(e)
 
 
+## Lucene
+
+- [TextField vs StringField](http://stackoverflow.com/questions/26752958/solr-text-field-and-string-field-different-search-behaviour):
+
+* TextFields usually have a tokenizer and text analysis attached, meaning that the indexed content is broken into separate tokens where there is no need for an exact match - each word / token can be matched separately to decide if the whole document should be included in the response.
+* StrFields cannot have any tokenization or analysis / filters applied, and will only give results for exact matches. If you need a StrField with analysis or filters applied, you can implement this using a TextField and a KeywordTokenizer.
+
+
+## 项目依赖
+
+    "com.github.interaction" %% "algorithms_of_the_intelligent_web" % "0.1.0",
+
+这个项目依赖我github上的另一个项目`algorithms_of_the_intelligent_web`,现成的代码修改了下就用了.
+主要是用于文档计算相似性cluster用的。但是由于分词的问题, terms 生成的有点乱, 效果还不是很好。以后解决下。
 
 
 ## [Logger Levels](http://stackoverflow.com/questions/5817738/how-to-use-log-levels-in-java)
@@ -124,11 +152,6 @@ We're using Log4J and the following levels:
 
 The beauty of this is that if you set the log level to WARN, info and debug messages have next to no performance impact. If you need to get additional information from a production system you just can lower the level to INFO or DEBUG for a short period of time (since you'd get much more log entries which make your log files bigger and harder to read). Adjusting log levels etc. can normally be done at runtime (our JBoss instance checks for changes in that config every minute or so).
 
-
-## Akka
-marshalling 
-
-    http://doc.akka.io/docs/akka/2.4.4/java/http/routing-dsl/marshalling.html
 
 
 
@@ -176,9 +199,20 @@ marshalling
         add sbt-native packager:
             http://doc.akka.io/docs/akka/2.4.10/intro/deployment-scenarios.html
             http://www.scala-sbt.org/sbt-native-packager/
+
+        try to apply some machine learning, calc similarity etc & cluster
+            formula:
+                E termXInDocA * termXInDocB / sqrt(E termXsInDocA) * sqrt(E termXsInDocB)
+
+            http://stackoverflow.com/questions/10649898/better-way-of-calculating-document-similarity-using-lucene
+            https://gist.github.com/butlermh/4672977
+            http://blog.christianperone.com/2013/09/machine-learning-cosine-similarity-for-vector-space-models-part-iii/
+            http://scikit-learn.org/stable/modules/clustering.html
+
     pending:
         add scala linter
-        try to apply some machine learning, calc similarity etc
+
+
         add scalaz lib & utilize it & refactor codes 
         add file name to the sorting weight
         clear todos in code
